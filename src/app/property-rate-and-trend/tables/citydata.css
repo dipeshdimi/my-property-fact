@@ -14,6 +14,7 @@
 .insight-property-rate-filter-child p{
     background-color: rgb(255, 192, 109);
     padding: 10px;
+    font-weight: 500;
 }
 .insight-property-rate-filter-child-active{
     background-color: #9fda9b !important;

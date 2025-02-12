@@ -9,38 +9,53 @@ import Paper from "@mui/material/Paper";
 import "./citydata.css";
 import ExternalData from "./data.json";
 import { useEffect, useState } from "react";
-export default function CityData() {
+
+export default function CityData({ table }) {
   const [externalData, setExternalData] = useState([]);
   const [aggregationFromList, setAggregationFromList] = useState([]);
   const [headers, setHeaders] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCat, setActiveCat] = useState(null);
   const [listData, setListData] = useState([]);
+
   useEffect(() => {
-    setExternalData(ExternalData.props.pageProps.formattedData);
+    setExternalData(ExternalData[table].props.pageProps.formattedData);
     fetchAggregationFromList();
     fetchHeaders();
+    setActiveIndex(0);
+    setActiveCat("all");
   }, []);
+
+  useEffect(() => {
+    if (externalData.length > 0) {
+      changeTableData("all", 0);
+    }
+  }, [externalData]);
+
   const fetchAggregationFromList = () => {
-    ExternalData.props.pageProps.formattedData.map((item) => {
+    ExternalData[table].props.pageProps.formattedData.map((item) => {
       setAggregationFromList(item.aggregationFromList);
     });
   };
+
   const fetchHeaders = () => {
-    ExternalData.props.pageProps.formattedData.map((item) => {
+    ExternalData[table].props.pageProps.formattedData.map((item) => {
       setHeaders(item.headers);
     });
   };
+
   function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
   }
-  const changeTableData = (value, index) => {
-    const filteredItem = aggregationFromList.find(
-      (item) => item.aggregationFromDisplayName === value
-    );
+
+  const changeTableData = (cat, index) => {
+    const filteredItem = externalData.find((item) => item.category === cat);
+    setActiveCat(cat);
     setActiveIndex(index);
-    setListData(filteredItem.details);
+    setAggregationFromList(filteredItem.aggregationFromList);
+    setListData(filteredItem.aggregationFromList[index].details);
   };
+
   const rows = [
     createData("Frozen yoghurt", 159, 6.0, 24),
     createData("Ice cream sandwich", 237, 9.0, 37),
@@ -48,6 +63,7 @@ export default function CityData() {
     createData("Cupcake", 305, 3.7, 67),
     createData("Gingerbread", 356, 16.0, 49),
   ];
+
   return (
     <>
       <div className="insight-property-rate-filter">
@@ -56,11 +72,11 @@ export default function CityData() {
             <p
               key={`${item.categoryDisplayName}-${index}`}
               className={`${
-                activeCat === index
+                activeCat === item.category
                   ? "insight-property-rate-filter-child-active"
                   : ""
               } cursor-pointer`}
-              // onClick={() => changeTableData(item.aggregationFromDisplayName, index)}
+              onClick={() => changeTableData(item.category, activeIndex)}
             >
               {item.categoryDisplayName}
             </p>
@@ -75,7 +91,7 @@ export default function CityData() {
                   ? "insight-property-rate-filter-child-active"
                   : ""
               } cursor-pointer`}
-              onClick={() => changeTableData(item.aggregationFromDisplayName, index)}
+              onClick={() => changeTableData(activeCat, index)}
             >
               {item.aggregationFromDisplayName}
             </p>
@@ -100,17 +116,34 @@ export default function CityData() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listData.map((row) => (
+            {listData.map((row, index) => (
               <TableRow
-                key={row.city}
+                key={`${row.location}-${index}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                style={{ backgroundColor: `${index&1===1 && '#eee'}`}}
               >
                 <TableCell component="th" scope="row">
-                  {row.city}
+                  {headers[0].headerDisplayName === "City Name"
+                    ? row.city
+                    : headers[0].headerDisplayName === "Location"
+                      ? row.location
+                      : row.developerName}
                 </TableCell>
-                <TableCell>{row.noOfTransactions}</TableCell>
-                <TableCell>{row.currentRate}</TableCell>
-                <TableCell>{row.changeValue}</TableCell>
+                <TableCell>
+                  {headers[1].headerDisplayName === "Transactions"
+                    ? row.noOfTransactions
+                    : headers[1].headerDisplayName === "Current Price"
+                      ? row.currentRate
+                      : row.saleRentValue}
+                </TableCell>
+                {headers.length > 2 && (
+                  <TableCell>
+                    {headers[2].headerDisplayName === "Current Price"
+                      ? row.currentRate
+                      : row.saleRentValue}
+                  </TableCell>
+                )}
+                {headers.length > 3 && <TableCell>{row.changeValue}</TableCell>}
               </TableRow>
             ))}
           </TableBody>

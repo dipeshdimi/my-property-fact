@@ -6,6 +6,8 @@ import "./property_rate.css";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CityData from "./tables/citydata";
 import Link from "next/link";
+import { useState } from "react";
+import { Button } from "bootstrap";
 export default function PropertyRateAndTrend() {
   const city = [
     "Mumbai",
@@ -44,6 +46,9 @@ export default function PropertyRateAndTrend() {
         "Pick a building or locality of your interest and see last 10 actual transactions before you negotiate with a broker or a builder.",
     },
   ];
+
+  const [searchedCity, setSearchedCity] = useState("");
+
   return (
     <>
       <Header />
@@ -58,46 +63,70 @@ export default function PropertyRateAndTrend() {
                 <option>Noida</option>
               </select>
             </div>
-            <input type="text" placeholder="Type any city for search" />
+            <input
+              type="text"
+              placeholder="Type any city for search"
+              value={searchedCity}
+              onChange={(e) => setSearchedCity(e.target.value)}
+            />
             <FontAwesomeIcon icon={faSearch} width={30} />
           </div>
+          {searchedCity.length > 1 && (
+            <div className="search-city-suggestions">
+              {city
+                .filter((cityName) =>
+                  cityName.toLowerCase().includes(searchedCity)
+                )
+                .map((matchedCity) => (
+                  <span key={matchedCity}>{matchedCity}</span>
+                ))}
+            </div>
+          )}
         </div>
         <div className="mt-5">
           <p className="h2 text-center">Property Rates in Cities</p>
           <div className="property-rate-cityname">
             {city.map((name, index) => (
-              <Link href="#" key={index + 1}>{name}</Link>
+              <Link href="#" key={index + 1}>
+                {name}
+              </Link>
             ))}
           </div>
         </div>
         <div className="property-rate-table-container">
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">City Average Price in India</p>
-            <CityData />
+            <CityData table="city-average-price" />
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Top Gainer Localities in India</p>
-            <CityData />
+            <CityData table="highest-price-appreciation" />
           </div>
         </div>
         <div className="property-rate-table-container">
           <div className="property-rate-city-price">
-            <p className="fs-5 fw-bold">Most Active Localities by Transaction in India</p>
-            <CityData />
+            <p className="fs-5 fw-bold">
+              Most Active Localities by Transaction in India
+            </p>
+            <CityData table="most-active-localities" />
           </div>
           <div className="property-rate-city-price">
-            <p className="fs-5 fw-bold">Most Active Localities by Value in India</p>
-            <CityData />
+            <p className="fs-5 fw-bold">
+              Most Active Localities by Value in India
+            </p>
+            <CityData table="most-active-localities-by-value" />
           </div>
         </div>
         <div className="property-rate-table-container">
           <div className="property-rate-city-price">
-            <p className="fs-5 fw-bold">Top Developers by Transaction in India</p>
-            <CityData />
+            <p className="fs-5 fw-bold">
+              Top Developers by Transaction in India
+            </p>
+            <CityData table="top-developers-by-transactions" />
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Top Developers by Value in India</p>
-            <CityData />
+            <CityData table="top-developers-by-value" />
           </div>
         </div>
         <div>

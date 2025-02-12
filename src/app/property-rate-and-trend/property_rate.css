@@ -5,7 +5,8 @@
     position: absolute;
     right: 1rem;
     z-index: 56;
-    top: 1rem;
+    top: 50%;
+    translate: 0 -50%;
     color: gray;
 }
 .search-container-child{
@@ -13,7 +14,7 @@
     display: flex;
     border: 2px solid;
     margin: 2rem auto;
-    border-radius: 1rem;
+    border-radius: 0.8rem;
     overflow: hidden;
     justify-content: space-between;
     position: relative;
@@ -25,33 +26,58 @@
     border: none;
     padding: 0px 2rem;
     font-size: 1.2rem;
+    outline: none;
 }
 .search-container input{
     padding: 1rem;
     width: 100%;
     border: none;
     border-left: 1px solid rgb(186, 186, 186);
+    outline: none;
 }
 .search-container input:focus-visible {
     border: none;
+}
+.search-city-suggestions {
+    display: flex;
+    flex-direction: column;
+    max-height: 10rem;
+    overflow: auto;
+    border: 1px solid gray;
+    width: 49%;
+    margin: auto;
+    margin-top: -1.8rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+.search-city-suggestions span {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+.search-city-suggestions span:hover {
+    background-color: #ddd;
 }
 .property-rate-cityname{
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     width: 90%;
     margin: 0px auto;
     margin-top: 2rem;
+    max-width: 70%;
 }
-.property-rate-cityname a{
-    padding: 0.2rem 1.5rem;
-    border-radius: 1rem;
+.property-rate-cityname a {
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
     border: 1px solid;
     margin-bottom: 0px;
     text-decoration: none;
     color: #000;
+}
+.property-rate-cityname a:hover {
+    background-color: #eee;
 }
 .property-rate-table-container{
     width: 80%;
