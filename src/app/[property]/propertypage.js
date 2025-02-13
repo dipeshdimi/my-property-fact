@@ -1,6 +1,14 @@
 "use client";
 import Link from "next/link";
 import Slider from "react-slick";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/free-mode";
+import "swiper/css/virtual";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Virtual } from "swiper/modules";
 import "./property.css";
 import "@/app/components/header/header.css";
 import "slick-carousel/slick/slick.css";
@@ -31,6 +39,7 @@ export default function Property({ slug }) {
   const [bannerData, setBannerData] = useState([]);
   const [faqs, setFaqs] = useState([]);
   var [count, setCount] = useState(1);
+
   const toggleAnswer = (index) => {
     const updatedVisibility = [...isAnswerVisible];
     updatedVisibility[index] = !updatedVisibility[index];
@@ -46,46 +55,42 @@ export default function Property({ slug }) {
     autoplay: false,
     autoplaySpeed: 2000,
   };
-  const settings1 = {
-    className: "center",
-    centerMode: true,
-    infinite: true,
-    centerPadding: "0px",
-    slidesToShow: 3,
-    speed: 500,
-    focusOnSelect: true,
-  };
-  
+
   const fetchGallery = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-gallery/get/${slug}`
     );
     setGalleryList(data.data);
   };
+
   const fetchWalkthrough = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-walkthrough/get/${slug}`
     );
     setWalkthrough(data.data);
   };
+
   const fetchFaqs = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-faqs/get/${slug}`
     );
     setFaqs(data.data);
   };
+
   const fetchProjectAbout = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-about/get/${slug}`
     );
     setAboutData(data.data);
   };
+
   const fetchBanners = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-banner/get/${slug}`
     );
     setBannerData(data.data);
   };
+
   useEffect(() => {
     const fetchProjectDetail = async () => {
       try {
@@ -95,6 +100,7 @@ export default function Property({ slug }) {
         setProjectDetail(data.data);
       } catch (error) {}
     };
+
     const fetchFloorPlans = async () => {
       try {
         const response = await axios.get(
@@ -104,6 +110,7 @@ export default function Property({ slug }) {
         setFloorPlanList(response.data);
       } catch (error) {}
     };
+
     const fetchData = async () => {
       try {
         const allFeaturedProperties = await axios.get(
@@ -114,6 +121,7 @@ export default function Property({ slug }) {
         console.error("Error fetching data: ", error);
       }
     };
+
     const fetchBenifits = async () => {
       try {
         const response = await axios.get(
@@ -124,6 +132,7 @@ export default function Property({ slug }) {
         console.error("Error fetching data: ", error);
       }
     };
+
     fetchData();
     fetchProjectDetail();
     fetchFloorPlans();
@@ -134,14 +143,16 @@ export default function Property({ slug }) {
     fetchWalkthrough();
     fetchBanners();
   }, []);
+
   const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
+
   return (
     <>
       <header className="header bg-light">
         <div className="main-header">
           <div className="container-lg d-flex justify-content-between position-relative align-items-center">
-            <div className="project-logo mt-3">
+            <div className="project-logo">
               <Link href="/">
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
@@ -183,6 +194,7 @@ export default function Property({ slug }) {
           </div>
         </div>
       </header>
+
       <div className="container-fluid mt-5 p-0">
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
@@ -192,6 +204,7 @@ export default function Property({ slug }) {
           </Slider>
           <div className="banner-form">
             <Form>
+              <h5 className="fw-semibold mb-3">Interested in the Project?</h5>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Control type="text" placeholder="Name*" />
               </Form.Group>
@@ -202,9 +215,9 @@ export default function Property({ slug }) {
                 <Form.Control type="text" placeholder="Phone Number*" />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
+                <Form.Check type="checkbox" label="Check me out" style={{fontSize: "14px"}} />
               </Form.Group>
-              <Button variant="primary" type="submit">
+              <Button variant="success" type="submit">
                 Submit
               </Button>
             </Form>
@@ -223,28 +236,35 @@ export default function Property({ slug }) {
           </div>
         </div>
         <div>
-          <h1 className="text-center mt-3">About The Project</h1>
-          <div className="p-3">
+          <h1 className="text-center mt-5 fw-bold">About The Project</h1>
+          <div className="px-3 pb-3 pt-1">
             <p
-              className="text-center"
+              className="text-center about-desc"
               dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}
             ></p>
           </div>
         </div>
+
         <div className="d-flex justify-content-center">
-          <button className="btn btn-success">READ MORE</button>
-          <button className="btn btn-success mx-3">DOWNLOAD BROCHURE</button>
-          <button className="btn btn-success">SCHEDULE A SITE VISIT</button>
+          <button className="btn btn-success fs-6">READ MORE</button>
+          <button className="btn btn-success mx-3 fs-6">
+            DOWNLOAD BROCHURE
+          </button>
+          <button className="btn btn-success fs-6">
+            SCHEDULE A SITE VISIT
+          </button>
         </div>
         <div className="d-flex justify-content-center mt-5">
           <div className="walkthrough-container">
             <div className="text-center">
               <p className="h1 text-light mt-5">Walkthrough</p>
             </div>
-            <div className="text-center p-5">
+            <div className="text-center py-3 px-5">
               <p
                 dangerouslySetInnerHTML={{
-                  __html: walkthrough.walkthroughDesc,
+                  __html:
+                    walkthrough.walkthroughDesc ||
+                    "Project Walkthrough not Found!",
                 }}
               ></p>
             </div>
@@ -253,63 +273,67 @@ export default function Property({ slug }) {
             </div>
           </div>
         </div>
+
         <div className="container-fluid bg-dark p-5 mt-5" id="amenities">
-          <p className="h1 text-center text-light">Amenities</p>
+          <p className="h1 text-center text-light fw-semibold mb-3">
+            Amenities
+          </p>
           <div>
             <p
-              className="text-center text-light"
+              className="text-center text-light fw-medium"
               dangerouslySetInnerHTML={{ __html: projectDetail.amenityDesc }}
             ></p>
           </div>
           <div className="row">
-            <div className="d-flex flex-wrap justify-content-center">
+            <div className="d-flex flex-wrap justify-content-center align-items-center gap-4">
               {amenities.map((item) => (
-                <div key={item.id} className="card mx-3 p-5 mt-3">
+                <div key={item.id} className="amenity-card">
+                  <div className="amenity-card-overlay" />
                   <img
+                    className="card-img"
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_URL +
                       "amenity/" +
                       item.amenityImageUrl
                     }
                     alt={item.altTag}
-                    style={{ width: "100px" }}
                   />
-                  <p>{item.title}</p>
+                  <h5 className="card-title">{item.title}</h5>
                 </div>
               ))}
             </div>
             <div className="mt-5 text-center">
-              <button className="btn btn-primary">VIEW ALL</button>
+              <button className="btn btn-success">VIEW ALL</button>
             </div>
           </div>
         </div>
         <div className="container-fluid" id="floorplan">
-          <div className="p-5">
-            <p className="h1 text-center">Floor Plans</p>
+          <div className="p-5 pb-4">
+            <p className="h1 text-center fw-semibold">Floor Plans</p>
             <p
               className="text-center"
               dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
             ></p>
           </div>
-          <div className="d-flex justify-content-center p-2">
+          <div className="d-flex justify-content-center p-2 mb-5">
             {floorPlanList.map((item) => (
-              <div key={count++} className="card mx-2" style={{ width: "30%" }}>
-                <div className=" p-3 rounded-sm">
+              <div key={count++} className="card mx-2 bg-light" style={{ width: "30%" }}>
+                <div className="p-3 rounded-sm">
                   <img
-                    style={{ width: "100%" }}
                     src="https://www.starestate.com/assets/images/generic-floorplan.jpg"
                     alt="floor plan"
+                    style={{width: "100%", borderRadius: "8px", border: "1px solid #999"}}
                   />
                 </div>
                 <div className="border-bottom property-type-detail">
-                  <p>
+                  <p className="fw-semibold">
                     <FontAwesomeIcon icon={faBed} width={20} color="green" />{" "}
                     Type
                   </p>
                   <p>{item.planType}</p>
                 </div>
                 <div className="mt-2 property-type-detail">
-                  <p>
+                  <p className="fw-semibold">
                     <FontAwesomeIcon
                       icon={faChartArea}
                       width={20}
@@ -327,27 +351,37 @@ export default function Property({ slug }) {
             ))}
           </div>
         </div>
-        <div className="container-fluid bg-dark p-5 mt-5" id="gallery">
+        <div className="container-fluid bg-dark p-5" id="gallery">
           <p className="text-center h1 text-light">Gallery</p>
-          <div>
-            <Slider {...settings1}>
-              {galleryList.map((item) => (
-                <div key={item.id}>
-                  <img
-                    style={{ height: "400px" }}
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
-                    alt="floor plan"
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
+          <Swiper
+            slidesPerView={3}
+            grabCursor={true}
+            centeredSlides={true}
+            centeredSlidesBounds={true}
+            freeMode={true}
+            navigation={true}
+            modules={[FreeMode, Navigation, Virtual]}
+            className="mySwiper no-slider-arrow library-swiper"
+          >
+            {galleryList.map((item) => (
+              <SwiperSlide
+                key={item.id}
+                style={{ borderRadius: "12px", overflow: "hidden" }}
+              >
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
+                  alt="floor plan"
+                  style={{height: "300px"}}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         <div className="container-fluid mt-5">
           <div>
-            <p className="h1 text-center">Location</p>
+            <p className="h1 text-center fw-semibold">Location</p>
           </div>
-          <div className="text-center p-5">
+          <div className="text-center px-5 fw-medium">
             <p
               dangerouslySetInnerHTML={{ __html: projectDetail.locationDesc }}
             ></p>
@@ -372,21 +406,21 @@ export default function Property({ slug }) {
               <div className="row border mt-3 p-3 d-flex justify-content-center">
                 <div className="col-md-6">
                   <div className="d-flex">
-                    <p className="text-success">Address: </p>
+                    <p className="text-success">Address:&nbsp;</p>
                     <p>{projectDetail.projectLocality}</p>
                   </div>
                   <div className="d-flex">
-                    <p className="text-success">State: </p>
+                    <p className="text-success">State:&nbsp;</p>
                     <p>{projectDetail.state}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="d-flex">
-                    <p className="text-success">City: </p>
+                    <p className="text-success">City:&nbsp;</p>
                     <p>{projectDetail.cityLocation}</p>
                   </div>
                   <div className="d-flex">
-                    <p className="text-success">Country: </p>
+                    <p className="text-success">Country:&nbsp;</p>
                     <p>India</p>
                   </div>
                 </div>
@@ -407,109 +441,61 @@ export default function Property({ slug }) {
           </div>
         </div>
       </div>
-      <div
-        className="container-fluid mt-3 p-5"
-        style={{ background: "#f2f2f2" }}
-      >
-        <div>
-          <p className="h1 text-center">Get in Touch</p>
-          <div className="d-flex justify-content-center">
-            <div className="w-50 text-center">
-              <p>
-                If you would like to know more details or something specific,
-                feel free to contact us. Our site representative will give you a
-                call back.
-              </p>
-            </div>
+
+      <div className="get-in-touch">
+        <div className="contact-container">
+          <div className="contact-left">
+            <h2>GET IN TOUCH</h2>
+            <p className="contact-description">
+              If you would like to know more details or something specific, feel
+              free to contact us. Our site representative will give you a call
+              back.
+            </p>
           </div>
-          <div>
-            <div className="touchFormWrapper">
-              <form>
-                <div className="row ">
-                  <div className="col-md-4 form-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Name*"
-                      name="Name"
-                      required=""
-                      defaultValue=""
-                    />
-                  </div>
-                  <div className="col-md-4 form-group">
-                    <div className="phone-container react-tel-input ">
-                      <input
-                        className="form-control"
-                        placeholder="1 (702) 123-4567"
-                        type="tel"
-                        defaultValue="+91"
-                      />
-                      <div className="flag-dropdown phone-button">
-                        <div
-                          className="selected-flag"
-                          title="India: + 91"
-                          tabIndex="0"
-                          role="button"
-                          aria-haspopup="listbox"
-                        >
-                          <div className="flag in">
-                            <div className="arrow"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-4 form-group">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Your email address*"
-                      name="Email"
-                      required=""
-                      defaultValue=""
-                    />
-                  </div>
-                  <div className="col-12 form-group">
-                    <div className="form-check mx-auto d-table ">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="agree_bottom"
-                      />
-                      <label
-                        className="form-check-label m-2 mt-2"
-                        htmlFor="agree_bottom"
-                      >
-                        {" "}
-                        I accept the Terms &amp; Conditions.
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div className="readmore d-flex justify-content-center">
-                  <button className="btn btn-success" type="submit" disabled="">
-                    Send Message
-                  </button>
-                </div>
-              </form>
-            </div>
+
+          <div className="contact-right">
+            <form>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your Name"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Enter your Phone Number"
+                required
+              />
+              <div className="checkbox-container">
+                <input type="checkbox" name="acceptedTerms" required />
+                <label>
+                  I accept the <a href="#">Terms of Service</a>
+                </label>
+              </div>
+              <button type="submit">Submit</button>
+            </form>
           </div>
         </div>
       </div>
-      <div
-        className="container-fluid mt-1 pb-5"
-        style={{ background: "#f2f2f2" }}
-      >
-        <p className="h1 text-center pt-5">FAQs</p>
+
+      <div className="container-fluid pb-5" style={{ background: "#cccccc" }}>
+        <p className="h1 text-center pt-5 fw-semibold">FAQs</p>
         <div className="container mt-3">
-          {faqs.map((item) => (
+          {faqs.map((item, index) => (
             <div key={item.id}>
               <div
                 className="container questions mt-3 d-flex"
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <p>Q 1: </p> {item.faqQuestion}
+                <p>Q{index+1}: </p> {item.faqQuestion}
                 <span className="plus-icon">+</span>
               </div>
               <div
@@ -526,10 +512,9 @@ export default function Property({ slug }) {
         </div>
       </div>
       <div className="container-fluid">
-        <p className="h1 text-center pt-3">Featured projects</p>
         <Featured />
       </div>
-      <div
+      {/* <div
         className="container-fluid d-flex justify-content-center"
         style={{ background: "#68ac78" }}
       >
@@ -537,7 +522,7 @@ export default function Property({ slug }) {
           <img src="/logo.png" alt="logo" style={{ width: "200px" }} />
         </div>
         <div></div>
-      </div>
+      </div> */}
       <Footer />
     </>
   );

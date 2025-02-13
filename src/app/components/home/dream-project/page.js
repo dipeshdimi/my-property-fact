@@ -1,7 +1,7 @@
 export default function DreamProject() {
   return (
     <>
-      <div className="container my-4">
+      <div className="container my-5">
         <p className="h3 text-center fw-bold">
           Find your dream property in the city you are searching in
         </p>

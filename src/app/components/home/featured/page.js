@@ -77,7 +77,8 @@ export default function Featured() {
             return (
               <aside key={property.id} className="p-4 container">
                 <div
-                  className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
+                  className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-lg flex flex-col items-center justify-content-center container main-container"
+                  style={{borderRadius: "12px", paddingTop: "12px"}}
                   onClick={() => goToPropertyDetail(property.slugURL)}
                 >
                   <img
@@ -101,7 +102,7 @@ export default function Featured() {
             );
           })}
         </Slider>
-        <div className="text-center">
+        <div className="text-center my-5">
           <Link className="btn btn-success" href="/projects">
             View all
           </Link>
